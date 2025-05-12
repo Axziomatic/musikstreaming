@@ -1,11 +1,46 @@
 const playlists = [];
 
-const examplePlaylist = {
-  name: "Söndagsmys",
-  genre: "Pop",
-  artist: "Veronica Maggio",
-  songs: ["Jag kommer", "Snälla bli min"],
-};
+const form = document.getElementById("new-playlist-form");
+const displaySection = document.getElementById("playlist-display");
 
-playlists.push(examplePlaylist);
-console.log(playlists);
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const name = document.getElementById("playlist-name").value.trim();
+  const genre = document.getElementById("playlist-genre").value.trim();
+  const artist = document.getElementById("playlist-artist").value.trim();
+  const songs = document
+    .getElementById("playlist-songs")
+    .value.split(",")
+    .map((song) => song.trim());
+
+  const playlist = {
+    name,
+    genre,
+    artist,
+    songs,
+  };
+
+  playlists.push(playlist);
+  displayPlaylists();
+  form.reset();
+});
+
+function displayPlaylists() {
+  const listContainer = document.createElement("div");
+  listContainer.innerHTML = "";
+
+  playlists.forEach((pl) => {
+    const div = document.createElement("div");
+    div.innerHTML = `
+      <h3>${pl.name}</h3>
+      <p><strong>Genre:</strong> ${pl.genre}</p>
+      <p><strong>Artist:</strong> ${pl.artist}</p>
+      <p><strong>Låtar:</strong> ${pl.songs.join(", ")}</p>
+      <hr />
+    `;
+    listContainer.appendChild(div);
+  });
+  displaySection.innerHTML = "<h2> Mina Spellistor</h2>";
+  displaySection.appendChild(listContainer);
+}
