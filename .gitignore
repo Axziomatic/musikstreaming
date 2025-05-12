@@ -1,0 +1,21 @@
+# macOS
+.DS_Store
+
+# Node 
+node_modules/
+dist/
+build/
+
+# Logs
+*.log
+
+# Systemfiler
+Thumbs.db
+
+# VSCode settings
+.vscode/
+
+# Env-filer 
+.env
+.env.local
+.env.*.local
