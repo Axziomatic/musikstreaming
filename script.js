@@ -1,7 +1,6 @@
 const playlists = [];
 
 const form = document.getElementById("new-playlist-form");
-const displaySection = document.getElementById("playlist-display");
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -27,30 +26,43 @@ form.addEventListener("submit", (event) => {
 });
 
 function displayPlaylists() {
+  const displaySection = document.getElementById("playlist-display");
   displaySection.innerHTML = "<h2>My Playlists</h2>";
 
-  const groupedByGenre = {};
+  const grouped = {};
 
   playlists.forEach((pl) => {
-    if (!groupedByGenre[pl.genre]) {
-      groupedByGenre[pl.genre] = [];
+    if (!grouped[pl.genre]) {
+      grouped[pl.genre] = {};
     }
-    groupedByGenre[pl.genre].push(pl);
+    if (!grouped[pl.genre][pl.artist]) {
+      grouped[pl.genre][pl.artist] = [];
+    }
+
+    grouped[pl.genre][pl.artist].push(pl);
   });
 
-  for (const genre in groupedByGenre) {
-    const genreSection = document.createElement("div");
-    genreSection.innerHTML = `<h3>Genre: ${genre}</h3>`;
+  for (const genre in grouped) {
+    const genreDiv = document.createElement("div");
+    genreDiv.innerHTML = `<h3>Genre: ${genre}</h3>`;
 
-    groupedByGenre[genre].forEach((pl) => {
-      const div = document.createElement("div");
-      div.innerHTML = `<p><strong>${pl.name}</strong> – ${pl.artist}</p>
-        <p><em>Songs:</em> ${pl.songs.join(", ")}</p>
-        <hr />
-      `;
-      genreSection.appendChild(div);
-    });
+    for (const artist in grouped[genre]) {
+      const artistDiv = document.createElement("div");
+      artistDiv.innerHTML = `<h4> Artist: ${artist}`;
 
-    displaySection.appendChild(genreSection);
+      grouped[genre][artist].forEach((pl) => {
+        const playlistDiv = document.createElement("div");
+        playlistDiv.innerHTML = `
+          <p><strong>Playlist:</strong> ${pl.name}</p>
+          <p><strong>Songs:</strong> ${pl.songs.join(", ")}</p>
+          <hr />
+        `;
+        artistDiv.appendChild(playlistDiv);
+      });
+
+      genreDiv.appendChild(artistDiv);
+    }
+
+    displaySection.appendChild(genreDiv);
   }
 }
