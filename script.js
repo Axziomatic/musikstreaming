@@ -27,20 +27,30 @@ form.addEventListener("submit", (event) => {
 });
 
 function displayPlaylists() {
-  const listContainer = document.createElement("div");
-  listContainer.innerHTML = "";
+  displaySection.innerHTML = "<h2>My Playlists</h2>";
+
+  const groupedByGenre = {};
 
   playlists.forEach((pl) => {
-    const div = document.createElement("div");
-    div.innerHTML = `
-      <h3>${pl.name}</h3>
-      <p><strong>Genre:</strong> ${pl.genre}</p>
-      <p><strong>Artist:</strong> ${pl.artist}</p>
-      <p><strong>Låtar:</strong> ${pl.songs.join(", ")}</p>
-      <hr />
-    `;
-    listContainer.appendChild(div);
+    if (!groupedByGenre[pl.genre]) {
+      groupedByGenre[pl.genre] = [];
+    }
+    groupedByGenre[pl.genre].push(pl);
   });
-  displaySection.innerHTML = "<h2> Mina Spellistor</h2>";
-  displaySection.appendChild(listContainer);
+
+  for (const genre in groupedByGenre) {
+    const genreSection = document.createElement("div");
+    genreSection.innerHTML = `<h3>Genre: ${genre}</h3>`;
+
+    groupedByGenre[genre].forEach((pl) => {
+      const div = document.createElement("div");
+      div.innerHTML = `<p><strong>${pl.name}</strong> – ${pl.artist}</p>
+        <p><em>Songs:</em> ${pl.songs.join(", ")}</p>
+        <hr />
+      `;
+      genreSection.appendChild(div);
+    });
+
+    displaySection.appendChild(genreSection);
+  }
 }
